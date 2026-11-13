@@ -1,12 +1,245 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
-	<Welcome />
-	<h1>hej</h1>
-</Layout>
+<main>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <img
+      class="hero__image"
+      src=" "
+      alt="Picture of event"
+    />
+    <div class="hero__content">
+      <p class="hero__tag">A design community in Copenhagen</p>
+      <h1 class="hero__title" id="hero-title">
+        For all kinds <br />of creative minds.
+      </h1>
+      <a class="button button--small" href="#events">
+        See what's on <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="next-event" aria-labelledby="next-event-title">
+    <h2 class="section-label" id="next-event-title">[ Next event ]</h2>
+
+    <article class="next-event__card">
+      <figure class="next-event__figure">
+        <img
+          class="next-event__image"
+          src=" "
+          alt="Picture of Rina Takikawa"
+        />
+        <figcaption class="next-event__speaker">Rina Takikawa</figcaption>
+        <span class="tag">[ Talk ]</span>
+        <span class="tag tag--date">Fri 21.11</span>
+      </figure>
+
+      <div class="next-event__info">
+        <h3 class="next-event__title">From Ballet to Technology</h3>
+        <p class="next-event__description">
+          On reinvention and creative identity. A talk with Rina Takikawa,
+          hosted together with YL Projects in Tokyo.
+        </p>
+
+        <dl class="details">
+          <div class="details__row">
+            <dt>Time</dt>
+            <dd>18:30–20:00 + mingling</dd>
+          </div>
+          <div class="details__row">
+            <dt>Place</dt>
+            <dd>YL Projects, Kagurazaka, Tokyo</dd>
+          </div>
+          <div class="details__row">
+            <dt>Price</dt>
+            <dd>¥1000</dd>
+          </div>
+          <div class="details__row">
+            <dt>Language</dt>
+            <dd>English (Japanese welcome)</dd>
+          </div>
+        </dl>
+
+        <div class="next-event__actions">
+          <a class="button" href="#">
+            Sign up on Peatix <span aria-hidden="true">→</span>
+          </a>
+          <a class="link" href="#">Add to calendar <span aria-hidden="true">+</span></a>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="events" id="events" aria-labelledby="events-title">
+    <header class="section-header">
+      <h2 class="section-label" id="events-title">[ Events ]</h2>
+      <a class="link" href="/events">All meet-ups →</a>
+    </header>
+
+    <ul class="events__list">
+      <li class="events__item">
+        <article class="event-row">
+          <div class="event-row__meta">
+            <p class="event-row__date">Date TBA</p>
+            <span class="tag">[ Meetup ]</span>
+          </div>
+          <h3 class="event-row__title">Coming soon</h3>
+          <a class="link event-row__link" href="#">Details on Instagram</a>
+        </article>
+      </li>
+
+      <li class="events__item">
+        <article class="event-row">
+          <div class="event-row__meta">
+            <p class="event-row__date">Date TBA</p>
+            <span class="tag">[ Skill sharing ]</span>
+          </div>
+          <h3 class="event-row__title">Coming soon</h3>
+          <a class="link event-row__link" href="#">Details on Instagram</a>
+        </article>
+      </li>
+
+      <li class="events__item">
+        <article class="event-row">
+          <div class="event-row__meta">
+            <p class="event-row__date">Date TBA</p>
+            <span class="tag">[ Social ]</span>
+          </div>
+          <h3 class="event-row__title">Coming soon</h3>
+          <a class="link event-row__link" href="#">Details on Instagram</a>
+        </article>
+      </li>
+    </ul>
+  </section>
+
+  <section class="latest" aria-labelledby="latest-title">
+    <header class="section-header">
+      <h2 class="section-label" id="latest-title">[ Latest events ]</h2>
+      <a class="link" href="/events/past">Past events →</a>
+    </header>
+
+    <ul class="latest__list">
+      <li class="latest__item">
+        <a class="card" href="#">
+          <img class="card__image" src="/images/latest-1.jpg" alt="Picture of people at event" />
+          <div class="card__tags">
+            <span class="tag">[ Skill sharing ]</span>
+            <span class="tag tag--date">Thu 29.10</span>
+          </div>
+          <h3 class="card__title">AI Skill sharing</h3>
+        </a>
+      </li>
+
+      <li class="latest__item">
+        <a class="card" href="#">
+          <img class="card__image" src=" " alt="Picture of people at event" />
+          <div class="card__tags">
+            <span class="tag">[ Meetup ]</span>
+            <span class="tag tag--date">Thu 14.05</span>
+          </div>
+          <h3 class="card__title">First meetup in Barcelona</h3>
+        </a>
+      </li>
+
+      <li class="latest__item">
+        <a class="card" href="#">
+          <img class="card__image" src=" " alt="Picture of people at event" />
+          <div class="card__tags">
+            <span class="tag">[ Talk ]</span>
+            <span class="tag tag--date">Thu 26.03</span>
+          </div>
+          <h3 class="card__title">Kinddesign Talks</h3>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="community" aria-labelledby="community-title">
+    <p class="section-label">[ Community ]</p>
+
+    <div class="community__content">
+      <h2 class="community__title" id="community-title">
+        Not just another <br />networking event.
+      </h2>
+
+      <div class="community__body">
+        <p class="community__text">
+          A community for all kinds of designers and creatives to share ideas,
+          build connections and spark inspiration.
+        </p>
+        <a class="button button--small" href="#">
+          Join us <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <img
+        class="community__image"
+        src=" "
+        alt="People talking at an event"
+      />
+    </div>
+  </section>
+
+  <section class="first-time" aria-labelledby="first-time-title">
+    <img
+      class="first-time__image"
+      src=" "
+      alt="A crowd of people at an event"
+    />
+    <div class="first-time__content">
+      <h2 class="first-time__title" id="first-time-title">First time?</h2>
+      <p class="first-time__text">Come alone, bring a friend. Here is what to expect.</p>
+      <a class="button button--small" href="#">
+        How an event goes <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="get-involved" aria-labelledby="get-involved-title">
+    <h2 class="section-label" id="get-involved-title">[ Be part of it ]</h2>
+
+    <ul class="get-involved__list">
+      <li class="get-involved__item">
+        <article class="involve-card">
+          <p class="involve-card__number">01</p>
+          <h3 class="involve-card__title">Join us.</h3>
+          <p class="involve-card__text">
+            Come to your first meet-up. Bring a friend or come alone.
+          </p>
+          <a class="button button--small" href="#events">
+            See the next event <span aria-hidden="true">→</span>
+          </a>
+        </article>
+      </li>
+
+      <li class="get-involved__item">
+        <article class="involve-card">
+          <p class="involve-card__number">02</p>
+          <h3 class="involve-card__title">Get involved.</h3>
+          <p class="involve-card__text">
+            Help us create something for Copenhagen's creative community.
+          </p>
+          <a class="button button--small button--outline" href="#">
+            Become a volunteer <span aria-hidden="true">→</span>
+          </a>
+        </article>
+      </li>
+
+      <li class="get-involved__item">
+        <article class="involve-card">
+          <p class="involve-card__number">03</p>
+          <h3 class="involve-card__title">Let's collab.</h3>
+          <p class="involve-card__text">
+            Have an idea, space or project? Let's make it happen.
+          </p>
+          <a class="button button--small button--outline" href="#">
+            Explore partnerships <span aria-hidden="true">→</span>
+          </a>
+        </article>
+      </li>
+    </ul>
+  </section>
+
+</main>
