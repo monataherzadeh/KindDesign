@@ -1,0 +1,24 @@
+---
+// EventCard: kort med foto, tag og titel ("Latest events"). Komponent med props.
+// Markuppen er den samme som i den oprindelige index.astro – nu genbrugelig.
+import Tag from "./Tag.astro";
+const { href = "#", image, alt, format, date, title } = Astro.props;
+---
+<a class="card" href={href}>
+  <img class="card__image" src={image} alt={alt} loading="lazy" />
+  <div class="card__tags">
+    <Tag format={format} date={date} />
+  </div>
+  <h3 class="card__title"><span class="highlight">{title}</span></h3>
+</a>
+
+<style>
+  .card { position: relative; display: block; text-decoration: none; overflow: hidden; }
+  .card__image { width: 100%; aspect-ratio: 4 / 5; transition: transform 0.6s var(--ease-out); }
+  .card:hover .card__image { transform: scale(1.03); }
+  .card__tags { position: absolute; top: 8px; left: 8px; }
+  .card__title {
+    position: absolute; left: 8px; bottom: 8px; max-width: 60%;
+    font-size: clamp(24px, 2.2vw, 32px); line-height: 1.15; letter-spacing: 0;
+  }
+</style>

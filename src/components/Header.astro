@@ -1,0 +1,101 @@
+---
+// Header 
+
+// Mobil: [ MENU ] åbner et panel med store links i én stor parentes.
+import Logo from "./Logo.astro";
+const path = Astro.url.pathname;
+const links = [
+  { href: "/events", label: "EVENTS" },
+  { href: "/past-events", label: "PAST EVENTS" },
+  { href: "/about", label: "ABOUT" },
+  { href: "/join-us", label: "JOIN US" },
+];
+---
+<header class="header">
+  <div class="container">
+    <div class="header__row">
+      <div class="header__logo"><Logo light /></div>
+
+      <nav class="header__nav brackets" aria-label="Hovedmenu">
+        <span class="header__items">
+          {links.map((l) => (
+            <a href={l.href} class:list={["hover-link", { active: path.startsWith(l.href) }]}>{l.label}</a>
+          ))}
+        </span>
+      </nav>
+
+      <button class="header__menu brackets" aria-expanded="false" aria-controls="mobilmenu">
+        <span class="header__menu-label">MENU</span>
+      </button>
+    </div>
+    <hr class="rule" />
+
+    <div id="mobilmenu" class="mobilmenu" hidden>
+      <nav class="mobilmenu__list brackets brackets--big" aria-label="Mobilmenu">
+        <span class="mobilmenu__items">
+          {links.map((l) => (
+            <a href={l.href} class:list={["hover-link", { active: path.startsWith(l.href) }]}>{l.label}</a>
+          ))}
+        </span>
+      </nav>
+      <p class="mobilmenu__follow">
+        <a href="https://www.instagram.com/kinddesign.cph/">Instagram</a>
+        <a href="https://lu.ma/">Luma</a>
+        <a href="mailto:kinddesign.cph@gmail.com">Email</a>
+      </p>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* MOBILE FIRST,
+     Fra 769px tilføjes desktopversionen (Desktop_Forside). */
+
+  /*  Mobil (grund)  */
+  .header { position: sticky; top: 0; z-index: 10; background: var(--surface); padding: 12px 0; }
+  .header .container { display: flex; flex-direction: column; gap: 12px; }
+  .header__row { display: flex; align-items: center; justify-content: space-between; }
+
+  .header__logo { background: var(--ink); display: flex; font-size: 22px; padding: 4px 8px; }
+
+  .header__nav { display: none; }
+
+  .header__menu { display: inline-flex; gap: 2px; padding: 13px 0; background: none; border: 0; font: inherit; color: var(--ink); cursor: pointer; }
+  .header__menu-label { font-size: 12px; font-weight: var(--font-weight-regular); line-height: 19px; padding: 0 2px; }
+
+  /* Mobilmenuen: kun synlig, når den er åbnet */
+  .mobilmenu { display: none; }
+  .mobilmenu:not([hidden]) { display: flex; flex-direction: column; gap: 16px; padding-top: 4px; }
+  .mobilmenu__list { gap: 10px; align-self: flex-start; }
+  .mobilmenu__items { display: flex; flex-direction: column; gap: 4px; padding: 5px 0; }
+  .mobilmenu__items a { font-size: 36px; font-weight: var(--font-weight-medium); line-height: 1.05; padding: 3px 5px; text-decoration: none; align-self: flex-start; }
+  .mobilmenu__follow { display: flex; gap: 16px; font-size: 16px; line-height: 1.05; }
+  .mobilmenu__follow a { text-decoration: underline; }
+
+  /*  Desktop (fra 769px) */
+  
+  @media (min-width: 769px) {
+    .header { padding: 16px 0; }
+    .header .container { gap: 16px; }
+    .header__logo { font-size: 35px; padding: 8px 16px; }
+
+    .header__nav { display: inline-flex; font-size: 20px; font-weight: var(--font-weight-medium); line-height: 1.3; gap: 7px; }
+    .header__items { display: flex; gap: 25px; }
+    .header__nav a { padding: 0 3px; text-decoration: none; }
+
+    /* MENU-knap og mobilmenu skjules – også hvis menuen stod åben */
+    .header__menu, .mobilmenu:not([hidden]) { display: none; }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector(".header__menu");
+  const label = document.querySelector(".header__menu-label");
+  const menu = document.getElementById("mobilmenu");
+  btn?.addEventListener("click", () => {
+    const open = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", String(!open));
+    label.textContent = open ? "MENU" : "CLOSE";
+    menu.hidden = open;
+  });
+</script>

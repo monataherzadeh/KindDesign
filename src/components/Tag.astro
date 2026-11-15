@@ -1,0 +1,31 @@
+---
+// Tag: [ FORMAT ] + dato. Komponent med props.
+// Brug: <Tag format="Talk" date="Fri 21.11" />
+const { format, date } = Astro.props;
+const colors = {
+  "talk": "var(--talk)",
+  "meetup": "var(--meetup)",
+  "skill sharing": "var(--skill)",
+  "social": "var(--social)",
+};
+const color = colors[format?.toLowerCase()] ?? "transparent";
+---
+<span class="tag">
+  {format && (
+    <span class="tag__slot slot">
+      <span class="tag__format" style={`background: ${color}`}>{format}</span>
+    </span>
+  )}
+  {date && <span class="tag__date">{date}</span>}
+</span>
+
+<style>
+  .tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 4px 8px; background: var(--off-white); color: var(--ink);
+  }
+  .tag__slot { gap: 2px; font-size: 15px; line-height: 1.05; }
+  .tag__slot::before, .tag__slot::after { width: 4px; border-width: 1.5px; }
+  .tag__format { padding: 0 2px; }
+  .tag__date { font-size: 14px; font-weight: var(--font-weight-medium); line-height: 1.45; }
+</style>
