@@ -1,0 +1,72 @@
+---
+// EventRow: én række i event-listen (forsiden). Komponent med props.
+//   eventets foto toner frem i sort/hvid, de andre rækker slører.
+// Senere kommer dataene fra Supabase.
+import Tag from "./Tag.astro";
+const { date, format, title, image, href = "#", linkText = "Details on Instagram" } = Astro.props;
+---
+<article class="event-row">
+  <div class="event-row__meta">
+    <p class="event-row__date">{date}</p>
+    <Tag format={format} />
+  </div>
+  <h3 class="event-row__title">{title}</h3>
+  <a class="link event-row__link" href={href}>{linkText}</a>
+  {image && <img class="event-row__photo" src={image} alt="" aria-hidden="true" loading="lazy" />}
+</article>
+
+<style>
+  /* Mobil (grund): alt under hinanden, intet hover-foto */
+  .event-row { position: relative; display: grid; gap: 8px; padding: 24px 0; }
+  .event-row__meta { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .event-row__meta :global(.tag) { padding: 0; background: none; }
+  .event-row__date { font-size: 18px; font-weight: var(--font-weight-medium); line-height: 1.45; }
+  .event-row__title { font-size: 36px; line-height: 1; letter-spacing: -0.035em; }
+  .event-row__link { font-size: 15px; font-weight: var(--font-weight-regular); text-decoration: none; }
+  .event-row__photo { display: none; }
+
+  /* Desktop: dato | titel med lodret streg | link, som i Figma */
+  @media (min-width: 769px) {
+    .event-row { grid-template-columns: 212px 1fr 212px; gap: 24px; align-items: start; }
+    .event-row__date { font-size: 20px; }
+    .event-row__title { font-size: clamp(48px, 6.1vw, 88px); border-left: 1.5px solid var(--ink); padding-left: 24px; }
+  }
+
+  /* ---------- Hover-effekten (kun med mus, desktop) ---------- */
+  @media (min-width: 769px) and (hover: hover) {
+    .event-row__title, .event-row__link {
+      transition: color 0.2s var(--ease-out), text-shadow 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
+    }
+
+    /* Fotoet: skjult, sløret og lidt mindre. Sort/hvid med +12 % kontrast som i Figma */
+    .event-row__photo {
+      display: block; position: absolute; z-index: 1; pointer-events: none;
+      left: 57%; top: 50%; width: 23%; aspect-ratio: 3 / 2;
+      opacity: 0;
+      filter: grayscale(1) contrast(1.12) blur(12px);
+      transform: translateY(-50%) scale(0.875);
+      transition: opacity 0.2s var(--ease-out), filter 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+    }
+    /* Ind: 0,12 s, ligesom Smart Animate i prototypen */
+    .event-row:hover .event-row__photo {
+      opacity: 1;
+      filter: grayscale(1) contrast(1.12) blur(0);
+      transform: translateY(-50%) scale(1);
+      transition-duration: 0.3s; transition-delay: 0.12s;
+    }
+  }
+</style>
+
+<style is:global>
+  /* De ANDRE rækker slører, mens man holder musen over én række.
+     (:has() = "listen, der har en række med hover") */
+  @media (min-width: 769px) and (hover: hover) {
+    /* Kun teksten slører (ikke den lodrette streg): gennemsigtig tekst + sløret skygge */
+    .events__list:has(.event-row:hover) .event-row:not(:hover) .event-row__title {
+      color: transparent; text-shadow: 0 0 8px var(--ink); transition-duration: 0.12s;
+    }
+    .events__list:has(.event-row:hover) .event-row:not(:hover) .event-row__link {
+      color: transparent; text-shadow: 0 0 4px var(--ink); opacity: 0.85; transition-duration: 0.12s;
+    }
+  }
+</style>
