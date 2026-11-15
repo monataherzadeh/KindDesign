@@ -1,0 +1,62 @@
+---
+
+import Logo from "./Logo.astro";
+---
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__top">
+      <ul>
+        <li><a class="hover-link" href="/events">Events</a></li>
+        <li><a class="hover-link" href="/past-events">Past events</a></li>
+        <li><a class="hover-link" href="/about">About</a></li>
+        <li><a class="hover-link" href="/join-us">Join us</a></li>
+      </ul>
+      <ul>
+        <li><a class="hover-link" href="https://www.instagram.com/kinddesign.cph/">Instagram</a></li>
+        <li><a class="hover-link" href="https://lu.ma/">Luma</a></li>
+        <li><a class="hover-link" href="mailto:kinddesign.cph@gmail.com">Email</a></li>
+      </ul>
+      <p class="footer__motto">PURE PASSION, NO PRETENSE</p>
+    </div>
+
+    <div class="footer__wordmark"><Logo href={null} /></div>
+
+    <div class="footer__bottom">
+      <hr class="rule" />
+      <div class="footer__small">
+        <span>A design community in Copenhagen</span>
+        <span>©2026 Kind Design</span>
+        <span>Design is better together</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* MOBILE FIRST: grundreglerne er mobilfooteren, desktop tilføjes fra 769px. */
+
+  /*  Mobil (grund) */
+  .footer { background: var(--surface); padding: 48px 0 82px; }
+  .footer__inner { display: flex; flex-direction: column; gap: 48px; }
+
+  .footer__top { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 16px; align-items: start; }
+  .footer ul { list-style: none; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .footer ul a { font-size: 18px; line-height: 1.45; padding: 0 4px; text-decoration: none; }
+  .footer__motto { grid-column: 1 / -1; font-size: 22px; font-weight: var(--font-weight-regular); line-height: 1.45; }
+
+  .footer__wordmark { display: flex; justify-content: center; font-size: 10.7vw; }
+
+  .footer__bottom { display: flex; flex-direction: column; gap: 16px; }
+  .footer__small { display: grid; grid-template-columns: 1fr; gap: 8px; font-size: 14px; line-height: 1.45; }
+
+  /*  Desktop (fra 769px)  */
+  @media (min-width: 769px) {
+    .footer { padding: 64px 0; }
+    .footer__inner { gap: 64px; }
+    .footer__top { grid-template-columns: 1fr 1fr 2fr; gap: 24px; }
+    .footer__motto { grid-column: auto; font-size: 32px; line-height: 1; letter-spacing: -0.01em; }
+    /* Stort logo: 162px på 1440px skærm */
+    .footer__wordmark { font-size: min(11.25vw, 162px); }
+    .footer__small { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  }
+</style>
