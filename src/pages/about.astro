@@ -2,126 +2,188 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<main>
+<Layout title="About">
 
-  <Layout title="About">
   <section class="about-hero" aria-labelledby="about-hero-title">
     <img
       class="about-hero__image"
-      src=" "
-      alt="A picture of an event crowd"
+      src="/images/about-hero.jpg"
+      alt="A full room of guests listening to a talk at a Kind Design event"
     />
     <h1 class="about-hero__title" id="about-hero-title">
-      A community for all kinds <br />of designers and creatives.
+      <span class="highlight">A community for all kinds <br />of designers and creatives.</span>
     </h1>
   </section>
 
-  <section class="about-row what-we-do" aria-labelledby="what-we-do-title">
-    <h2 class="about-row__title" id="what-we-do-title">What we do</h2>
-    <div class="about-row__content">
-      <p class="what-we-do__text">
-        We are a community created for all kinds of designers and creatives to come together, connect and share ideas. Our meet-ups create a relaxed space to share experiences, talk about working in design and build inspiring connections. No bragging, no competition, just common passion.
-      </p>
-    </div>
-  </section>
+  <div class="about-table">
 
-  <section class="about-row team" aria-labelledby="team-title">
-    <h2 class="about-row__title" id="team-title">Who’s behind it</h2>
-    <div class="about-row__content">
-      <img
-        class="team__image"
-        src=" "
-        alt="Picture of people talking at event"
-      />
+    <section class="about-row what-we-do" aria-labelledby="what-we-do-title">
+      <h2 class="about-row__title" id="what-we-do-title">What we do</h2>
+      <div class="about-row__content">
+        <p class="what-we-do__text">
+          We are a community created for all kinds of designers and creatives to come together, connect and share ideas. Our meet-ups create a relaxed space to share experiences, talk about working in design and build inspiring connections. No bragging, no competition, just common passion.
+        </p>
+      </div>
+    </section>
 
-      <ul class="team__list">
-        <li class="team__item">
-          <article class="person">
-            <h3 class="person__name">Julia Kulbaczewska</h3>
-            <p class="person__role">Co-founder · Digital Designer at DEPT®</p>
-          </article>
-        </li>
-        <li class="team__item">
-          <article class="person">
-            <h3 class="person__name">Jeremy Bohdan</h3>
-            <p class="person__role">Co-founder · Founder of Double 2 Studio</p>
-          </article>
-        </li>
-      </ul>
-    </div>
-  </section>
+    <section class="about-row team" aria-labelledby="team-title">
+      <h2 class="about-row__title" id="team-title">Who’s behind it</h2>
+      <div class="about-row__content">
+        <img
+          class="team__image"
+          src="/images/about-team.jpg"
+          alt="Julia and Jeremy talking with a guest at an event"
+        />
 
-  <section class="about-row involved" aria-labelledby="involved-title">
-    <h2 class="about-row__title" id="involved-title">Get involved</h2>
-    <div class="about-row__content">
-      <ul class="involved__list">
-        <li class="involved__item">
-          <a class="link" href="#">Volunteer <span aria-hidden="true">→</span></a>
-          <p class="involved__text">Help set up, welcome guests and keep the event running.</p>
-        </li>
-        <li class="involved__item">
-          <a class="link" href="#">Host or speak <span aria-hidden="true">→</span></a>
-          <p class="involved__text">Got a space, a story or a skill to share? Let’s plan an event.</p>
-        </li>
-        <li class="involved__item">
-          <a class="link" href="#">Partner <span aria-hidden="true">→</span></a>
-          <p class="involved__text">Support an event with a venue, drinks or a speaker.</p>
-        </li>
-      </ul>
-    </div>
-  </section>
+        <ul class="team__list">
+          <li class="team__item">
+            <article class="person">
+              <h3 class="person__name">Julia Kulbaczewska</h3>
+              <p class="person__role">Co-founder · Digital Designer at DEPT®</p>
+            </article>
+          </li>
+          <li class="team__item">
+            <article class="person">
+              <h3 class="person__name">Jeremy Bohdan</h3>
+              <p class="person__role">Co-founder · Founder of Double 2 Studio</p>
+            </article>
+          </li>
+        </ul>
+      </div>
+    </section>
 
-  <section class="about-row contact" aria-labelledby="contact-title">
-    <h2 class="about-row__title" id="contact-title">Contact</h2>
-    <div class="about-row__content">
-      <ul class="contact__list">
-        <li class="contact__item">
-          <a class="link" href="#">Instagram <span aria-hidden="true">→</span></a>
-        </li>
-        <li class="contact__item">
-          <a class="link" href="mailto:">Email <span aria-hidden="true">→</span></a>
-        </li>
-      </ul>
-    </div>
-  </section>
+    <section class="about-row involved" aria-labelledby="involved-title">
+      <h2 class="about-row__title" id="involved-title">Get involved</h2>
+      <div class="about-row__content">
+        <ul class="involved__list">
+          <li class="involved__item">
+            <a class="link" href="mailto:kinddesign.cph@gmail.com?subject=Volunteer">Volunteer <span aria-hidden="true">→</span></a>
+            <p class="involved__text">Help set up, welcome guests and keep the event running.</p>
+          </li>
+          <li class="involved__item">
+            <a class="link" href="mailto:kinddesign.cph@gmail.com?subject=Host%20or%20speak">Host or speak <span aria-hidden="true">→</span></a>
+            <p class="involved__text">Got a space, a story or a skill to share? Let’s plan an event.</p>
+          </li>
+          <li class="involved__item">
+            <a class="link" href="mailto:kinddesign.cph@gmail.com?subject=Partner">Partner <span aria-hidden="true">→</span></a>
+            <p class="involved__text">Support an event with a venue, drinks or a speaker.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
 
-  <section class="about-row partners" aria-labelledby="partners-title">
-    <h2 class="about-row__title" id="partners-title">Partners</h2>
-    <div class="about-row__content">
-      <p class="partners__intro">
-        Kind Design events are made together with studios, tools and spaces that
-        share the passion.
-      </p>
+    <section class="about-row contact" aria-labelledby="contact-title">
+      <h2 class="about-row__title" id="contact-title">Contact</h2>
+      <div class="about-row__content">
+        <ul class="contact__list">
+          <li class="contact__item">
+            <a class="link" href="https://www.instagram.com/kinddesign.cph/">Instagram <span aria-hidden="true">→</span></a>
+          </li>
+          <li class="contact__item">
+            <a class="link" href="mailto:kinddesign.cph@gmail.com">Email <span aria-hidden="true">→</span></a>
+          </li>
+        </ul>
+      </div>
+    </section>
 
-      <ul class="partners__list">
-        <li class="partners__item">
-          <span class="partners__name">[ READYMAG ]</span>
-          <span class="partners__relation">Supported by</span>
-          <span class="partners__event">Kinddesign Talks · 26.03</span>
-          <a class="link partners__link" href="#">See the recap <span aria-hidden="true">→</span></a>
-        </li>
-        <li class="partners__item">
-          <span class="partners__name">[ DEPT ]</span>
-          <span class="partners__relation">Hosted at</span>
-          <span class="partners__event">AI Skill sharing · 29.10</span>
-        </li>
-        <li class="partners__item">
-          <span class="partners__name">[ THEODORA EXTRA ]</span>
-          <span class="partners__relation">Hosted at</span>
-          <span class="partners__event">First meetup in Barcelona · 14.05</span>
-        </li>
-        <li class="partners__item">
-          <span class="partners__name">[ BERNIE'S COWORKING ]</span>
-          <span class="partners__relation">Hosted at</span>
-          <span class="partners__event">AI Real Talk · before summer</span>
-        </li>
-      </ul>
+    <section class="about-row partners" aria-labelledby="partners-title">
+      <h2 class="about-row__title" id="partners-title">Partners</h2>
+      <div class="about-row__content">
+        <p class="partners__intro">
+          Kind Design events are made together with studios, tools and spaces that
+          share the passion.
+        </p>
 
-      <a class="button button--small" href="#">
-        Become a partner <span aria-hidden="true">→</span>
-      </a>
-    </div>
-  </section>
-  </Layout>
+        <ul class="partners__list">
+          <li class="partners__item">
+            <span class="partners__name slot">Readymag</span>
+            <span class="partners__relation">Supported by</span>
+            <span class="partners__event">Kinddesign Talks · 26.03</span>
+            <a class="link partners__link" href="/past-events">See the recap <span aria-hidden="true">→</span></a>
+          </li>
+          <li class="partners__item">
+            <span class="partners__name slot">Dept</span>
+            <span class="partners__relation">Hosted at</span>
+            <span class="partners__event">AI Skill sharing · 29.10</span>
+          </li>
+          <li class="partners__item">
+            <span class="partners__name slot">Theodora Extra</span>
+            <span class="partners__relation">Hosted at</span>
+            <span class="partners__event">First meetup in Barcelona · 14.05</span>
+          </li>
+          <li class="partners__item">
+            <span class="partners__name slot">Bernie's Coworking</span>
+            <span class="partners__relation">Hosted at</span>
+            <span class="partners__event">AI Real Talk · before summer</span>
+          </li>
+        </ul>
 
-</main>
+        <a class="button button--small" href="mailto:kinddesign.cph@gmail.com?subject=Partnership">
+          <span>Become a partner</span> <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+</Layout>
+
+<style>
+  /* MOBILE FIRST,
+     desktop tilføjes fra 769px (Desktop_About). */
+  ul { list-style: none; }
+
+  /*  Hero  */
+  .about-hero { position: relative; height: clamp(480px, 50vw, 720px); display: flex; align-items: flex-end; }
+  .about-hero__image { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .about-hero__title {
+    position: relative; padding: 0 var(--gutter) var(--gutter);
+    font-size: clamp(28px, 3.9vw, 56px); line-height: 1.1; letter-spacing: -0.015em;
+  }
+
+  /* Tabel: label til venstre, indhold til højre  */
+  .about-table { max-width: calc(1392px + 2 * var(--gutter)); margin: 0 auto; padding: 48px var(--gutter); }
+  .about-row { display: grid; gap: 16px; padding: 24px 0; border-top: 1.5px solid var(--ink); }
+  .about-row:last-child { border-bottom: 1.5px solid var(--ink); }
+  .about-row__title { font-size: clamp(24px, 2.2vw, 32px); line-height: 1; letter-spacing: -0.015em; }
+  .about-row__content { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+
+  .what-we-do__text { font-size: clamp(18px, 1.7vw, 24px); line-height: 1.45; }
+
+  .team__image { width: 100%; aspect-ratio: 16 / 9; }
+  .team__list { display: grid; gap: 16px; align-self: stretch; }
+  .person { display: flex; flex-direction: column; gap: 6px; padding-top: 12px; border-top: 1.5px solid var(--ink); }
+  .person__name { font-size: clamp(22px, 1.9vw, 28px); line-height: 1; letter-spacing: 0; }
+  .person__role { font-size: 16px; line-height: 1.45; }
+
+  .involved__list { display: flex; flex-direction: column; gap: 16px; align-self: stretch; }
+  .involved__item { display: flex; flex-direction: column; gap: 2px; }
+  .involved__text { font-size: 15px; line-height: 1.45; }
+
+  .contact__list { display: flex; gap: 24px; }
+
+  .partners__intro { font-size: 18px; line-height: 1.45; }
+  .partners__list { align-self: stretch; }
+  .partners__item {
+    display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: baseline;
+    padding: 12px 0; border-bottom: 1.5px solid var(--ink); font-size: 15px; line-height: 1.45;
+  }
+  .partners__name { grid-column: 1 / -1; justify-self: start; font-size: 18px; line-height: 1.3; gap: 4px; }
+  .partners__name::before, .partners__name::after { width: 4px; border-width: 1.5px; }
+  .partners__link { font-size: 15px; }
+
+  /*  Desktop (fra 769px)  */
+  @media (min-width: 769px) {
+    .about-table { padding-block: 96px; }
+    .about-row { grid-template-columns: 1fr 2fr; gap: 24px; padding: 32px 0; }
+
+    .team__list { grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    .involved__item { flex-direction: row; justify-content: space-between; align-items: baseline; gap: 24px; }
+    .involved__text { text-align: right; }
+
+    .partners__intro { font-size: 20px; }
+    .partners__item { grid-template-columns: 2fr 1fr 2fr auto; gap: 16px; }
+    .partners__name { grid-column: auto; }
+  }
+</style>
