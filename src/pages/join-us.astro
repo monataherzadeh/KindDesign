@@ -125,20 +125,21 @@ import Layout from "../layouts/Layout.astro";
 
   .steps, .faq, .ready { padding-inline: max(var(--gutter), calc((100% - 1392px) / 2)); }
 
-  /* ---------- Hero: titel og knap i midten ---------- */
-  .ft-hero { position: relative; height: clamp(480px, 50vw, 720px); display: grid; place-items: center; }
+  /*  Hero: titel og knap i midten  */
+    .ft-hero { position: relative; height: clamp(480px, 50vw, 720px); display: grid; place-items: center;
+             max-width: 1440px; margin-inline: auto; }
   .ft-hero__image { position: absolute; inset: 0; width: 100%; height: 100%; }
   .ft-hero__content { position: relative; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: var(--gutter); text-align: center; }
   .ft-hero__title { font-size: clamp(48px, 7.2vw, 104px); line-height: 1.13; letter-spacing: -0.035em; }
 
-  /* ---------- Sådan foregår et event ---------- */
+  /*  Sådan foregår et event  */
   .steps { display: flex; flex-direction: column; gap: 24px; padding-block: 48px; }
   .steps__list { display: grid; gap: 24px; }
   .step { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 16px; border-top: 1.5px solid var(--ink); }
   .step__number { font-size: 30px; line-height: 1.05; letter-spacing: -0.015em; gap: 4px; }
   .step__text { font-size: 18px; line-height: 1.45; }
 
-  /* ---------- FAQ: <details> åbner/lukker uden JavaScript ---------- */
+  /*  FAQ: <details> åbner/lukker uden JavaScript  */
   .faq { display: grid; gap: 24px; padding-bottom: 48px; }
   .faq__intro { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
   .faq__description { font-size: 16px; line-height: 1.45; }
@@ -159,7 +160,7 @@ import Layout from "../layouts/Layout.astro";
   .faq__answer { padding-bottom: 16px; font-size: 16px; line-height: 1.45; }
   .faq__answer:empty { display: none; }
 
-  /* ---------- Klar? ---------- */
+  /*  Klar?  */
   .ready {
     display: flex; flex-direction: column; align-items: flex-start; gap: 24px; padding-block: 48px;
     /* linjen øverst følger indholdets bredde */
@@ -170,7 +171,7 @@ import Layout from "../layouts/Layout.astro";
   .ready__title { font-size: clamp(28px, 2.8vw, 40px); line-height: 1.1; letter-spacing: -0.02em; }
   .ready__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }
 
-  /* ---------- Desktop (fra 769px) ---------- */
+  /*  Desktop (fra 769px)  */
   @media (min-width: 769px) {
     .steps { gap: 32px; padding-block: 96px; }
     .steps__list { grid-template-columns: repeat(3, 1fr); }

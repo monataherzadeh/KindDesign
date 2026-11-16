@@ -4,19 +4,27 @@ import Tag from "../components/Tag.astro";
 import EventRow from "../components/EventRow.astro";
 import EventCard from "../components/EventCard.astro";
 
-// De gentagne rækker og kort er lavet om til komponenter med props.
-// Indholdet senere hentes dataene fra Supabase.
-const upcoming = [
-  { date: "Date TBA", format: "Meetup", title: "Coming soon", image: "/images/upcoming-1.jpg", href: "https://www.instagram.com/kinddesign.cph/" },
-  { date: "Date TBA", format: "Skill sharing", title: "Coming soon", image: "/images/upcoming-2.jpg", href: "https://www.instagram.com/kinddesign.cph/" },
-  { date: "Date TBA", format: "Social", title: "Coming soon", image: "/images/upcoming-3.jpg", href: "https://www.instagram.com/kinddesign.cph/" },
-];
+import { url, options, imgurl, dateLabel, isPast, eventLink, formatColors } from "../lib/supabase.js";
 
-const latest = [
-  { image: "/images/latest-1.jpg", alt: "People at the AI Skill sharing event", format: "Skill sharing", date: "Thu 29.10", title: "AI Skill sharing" },
-  { image: "/images/latest-2.jpg", alt: "People talking at the first meetup in Barcelona", format: "Meetup", date: "Thu 14.05", title: "First meetup in Barcelona" },
-  { image: "/images/latest-3.jpg", alt: "Guests listening to a talk at Kinddesign Talks", format: "Talk", date: "Thu 26.03", title: "Kinddesign Talks" },
-];
+// Data fra Supabase: events (sorteret efter dato) og talere
+const events = await fetch(url + "Events?select=*&order=dato.asc", options).then((res) => res.json());
+const speakers = await fetch(url + "Speakers?select=*", options).then((res) => res.json());
+
+const upcomingAll = events.filter((e) => !isPast(e));
+const next = upcomingAll.find((e) => e.dato);                          // næste event med dato
+const nextSpeaker = next && speakers.find((s) => s.event_id === next.id)?.name;
+
+// De næste 3 kommende events (EventRow)
+const upcoming = upcomingAll.filter((e) => e !== next).slice(0, 3).map((e) => ({
+  date: dateLabel(e.dato), format: e.format, title: e.title,
+  image: e.image && imgurl + e.image, href: eventLink(e),
+}));
+
+// De 3 nyeste tidligere events (EventCard)
+const latest = events.filter((e) => isPast(e)).reverse().slice(0, 3).map((e) => ({
+  image: e.image && imgurl + e.image, alt: `${e.title}, a Kind Design ${e.format?.toLowerCase()}`,
+  format: e.format, date: dateLabel(e.dato), title: e.title, href: eventLink(e),
+}));
 ---
 
 <Layout title="Home">
@@ -38,55 +46,44 @@ const latest = [
     </div>
   </section>
 
+  {next && (
   <section class="next-event" id="next-event" aria-labelledby="next-event-title">
     <h2 class="section-label slot" id="next-event-title">Next event</h2>
 
-    <article class="next-event__card">
+    <article class="next-event__card" style={`background: ${formatColors[next.format] ?? "var(--surface)"}`}>
       <figure class="next-event__figure">
         <img
           class="next-event__image"
-          src="/images/next-event.webp"
-          alt="Rina Takikawa smiling, sitting on a sofa"
+          src={next.image && imgurl + next.image}
+          alt={`${nextSpeaker ?? next.title} at a Kind Design ${next.format?.toLowerCase()}`}
         />
-        <figcaption class="next-event__speaker"><span class="highlight">Rina Takikawa</span></figcaption>
-        <span class="next-event__tag"><Tag format="Talk" date="Fri 21.11" /></span>
+        <figcaption class="next-event__speaker"><span class="highlight">{nextSpeaker ?? next.title}</span></figcaption>
+        <span class="next-event__tag"><Tag format={next.format} date={dateLabel(next.dato)} /></span>
       </figure>
 
       <div class="next-event__info">
-        <h3 class="next-event__title">From Ballet to Technology</h3>
-        <p class="next-event__description">
-          On reinvention and creative identity. A talk with Rina Takikawa,
-          hosted together with YL Projects in Tokyo.
-        </p>
+        <h3 class="next-event__title"><a href={eventLink(next)}>{next.title}</a></h3>
+        {next.description && <p class="next-event__description">{next.description}</p>}
 
         <dl class="details">
-          <div class="details__row">
-            <dt>Time</dt>
-            <dd>18:30–20:00 + mingling</dd>
-          </div>
-          <div class="details__row">
-            <dt>Place</dt>
-            <dd>YL Projects, Kagurazaka, Tokyo</dd>
-          </div>
-          <div class="details__row">
-            <dt>Price</dt>
-            <dd>¥1000</dd>
-          </div>
-          <div class="details__row">
-            <dt>Language</dt>
-            <dd>English (Japanese welcome)</dd>
-          </div>
+          {next.time && <div class="details__row"><dt>Time</dt><dd>{next.time}</dd></div>}
+          {next.venue && <div class="details__row"><dt>Place</dt><dd>{next.venue}</dd></div>}
+          {next.price && <div class="details__row"><dt>Price</dt><dd>{next.price}</dd></div>}
+          {next.language && <div class="details__row"><dt>Language</dt><dd>{next.language}</dd></div>}
         </dl>
 
         <div class="next-event__actions">
-          <a class="button" href="#">
-            <span>Sign up on Peatix</span> <span aria-hidden="true">→</span>
-          </a>
-          <a class="link" href="#">Add to calendar <span aria-hidden="true">→</span></a>
+          {(next.signup_label || next.signup_url) && (
+            <a class="button" href={next.signup_url ?? "#"}>
+              <span>{next.signup_label ?? "Sign up"}</span> <span aria-hidden="true">→</span>
+            </a>
+          )}
+          <a class="link" href={eventLink(next)}>See the event <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </article>
   </section>
+  )}
 
   <section class="events" id="events" aria-labelledby="events-title">
     <header class="section-header">
@@ -213,14 +210,15 @@ const latest = [
   /*  Fælles: sektioner, overskrifter, lister  */
   .next-event, .events, .latest, .community, .first-time, .get-involved {
     /* indholdet er max 1392px bredt, baggrunde går helt ud */
-    padding-inline: max(var(--gutter), calc((100% - 1392px) / 2));
+       padding: 0 max(var(--gutter), calc((100% - 1392px) / 2)) var(--gutter);
     display: flex; flex-direction: column; gap: 24px;
   }
   .section-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
   ul { list-style: none; }
 
   /*  Hero  */
-  .hero { position: relative; height: clamp(560px, 60vw, 864px); display: flex; align-items: flex-end; }
+    .hero { position: relative; height: clamp(560px, 60vw, 864px); display: flex; align-items: flex-end;
+          max-width: 1440px; margin-inline: auto; }
   .hero__image { position: absolute; inset: 0; width: 100%; height: 100%; }
   .hero__content {
     position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
@@ -240,6 +238,7 @@ const latest = [
     font-size: clamp(28px, 3.9vw, 56px); font-weight: var(--font-weight-medium); line-height: 1.07; letter-spacing: -0.015em;
   }
   .next-event__info { display: flex; flex-direction: column; gap: 24px; }
+  .next-event__title a { text-decoration: none; }
   .next-event__title { font-size: clamp(24px, 2.2vw, 32px); line-height: 1; letter-spacing: -0.015em; }
   .next-event__description { font-size: 16px; line-height: 1.45; }
   .details { border-bottom: 1.5px solid var(--ink); }

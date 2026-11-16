@@ -1,0 +1,101 @@
+---
+// /past-events – tidligere events 
+// Latest = kort (EventCard), Archive = rækker (EventRow). Data fra Supabase.
+import Layout from "../../layouts/Layout.astro";
+import EventCard from "../../components/EventCard.astro";
+import EventRow from "../../components/EventRow.astro";
+import { url, options, imgurl, dateLabel, isPast, eventLink } from "../../lib/supabase.js";
+
+// Nyeste først
+const events = await fetch(url + "Events?select=*&order=dato.desc", options).then((res) => res.json());
+const partners = await fetch(url + "partners?select=*", options).then((res) => res.json());
+
+const past = events.filter((event) => isPast(event));
+const nextEvent = events.filter((e) => e.dato && !isPast(e)).at(-1);   // nærmeste kommende
+
+const partnerName = (event) => partners.find((p) => p.id === event.partner_id)?.name;
+---
+
+<Layout title="Past events">
+
+  <section class="latest" aria-labelledby="latest-title">
+    <h1 class="section-label slot" id="latest-title">Latest</h1>
+    <ul class="latest__list">
+      {past.map((event) => (
+        <li class="latest__item">
+          <EventCard
+            href={eventLink(event)}
+            image={event.image && imgurl + event.image}
+            alt={`${event.title}, a Kind Design ${event.format?.toLowerCase()}`}
+            format={event.format}
+            date={dateLabel(event.dato)}
+            title={event.title}
+          />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="archive" aria-labelledby="archive-title">
+    <h2 class="section-label slot" id="archive-title">Archive</h2>
+    <ul class="events__list">
+      {past.map((event) => (
+        <li class="events__item">
+          <EventRow
+            date={dateLabel(event.dato)}
+            format={event.format}
+            title={event.title}
+            subtitle={partnerName(event) && `${event.partner_role} ${partnerName(event)}`}
+            image={event.image && imgurl + event.image}
+            href={eventLink(event)}
+            linkText="See the recap →"
+          />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {nextEvent && (
+    <section class="next-step" aria-labelledby="next-title">
+      <p class="next-step__label slot">What's next</p>
+      <h2 class="next-step__title" id="next-title">Next up: {dateLabel(nextEvent.dato)} · {nextEvent.title}</h2>
+      <a class="button button--light" href="/events">
+        <span>See the programme</span> <span aria-hidden="true">→</span>
+      </a>
+    </section>
+  )}
+
+</Layout>
+
+<style>
+  /* MOBILE FIRST – desktop fra 769px */
+  .latest, .archive, .next-step { padding-inline: max(var(--gutter), calc((100% - 1392px) / 2)); }
+  ul { list-style: none; }
+
+  .latest { display: flex; flex-direction: column; gap: 24px; padding-block: 24px 48px; }
+  /* Mobil: kortene swipes vandret. Desktop: alle på én række */
+  .latest__list {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 70%; gap: 16px;
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  }
+  .latest__item { scroll-snap-align: start; }
+
+  .archive { display: flex; flex-direction: column; gap: 24px; padding-bottom: 48px; }
+  .events__list { border-top: 1.5px solid var(--ink); }
+  .events__item { border-bottom: 1.5px solid var(--ink); }
+
+  .next-step {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding-block: 32px 48px;
+    background: linear-gradient(var(--ink), var(--ink)) top center / min(1392px, calc(100% - 2 * var(--gutter))) 1.5px no-repeat;
+  }
+  .next-step__label { font-size: 13px; text-transform: uppercase; gap: 4px; }
+  .next-step__label::before, .next-step__label::after { width: 4px; border-width: 1.5px; }
+  .next-step__title { font-size: clamp(24px, 2.2vw, 32px); line-height: 1.1; letter-spacing: -0.015em; }
+
+  @media (min-width: 769px) {
+    .latest { gap: 32px; padding-block: 32px 96px; }
+    .latest__list { grid-auto-flow: row; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); overflow: visible; gap: 24px; }
+    .archive { gap: 32px; padding-bottom: 96px; }
+    .next-step { padding-block: 48px 96px; }
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+// /events – programmet (Desktop_Programme i Figma)
+// Henter tabellen "Events" fra Supabase og viser kommende events pr. måned.
+import Layout from "../../layouts/Layout.astro";
+import EventRow from "../../components/EventRow.astro";
+import { url, options, imgurl, dateLabel, isPast, shortTime, eventLink } from "../../lib/supabase.js";
+
+// Hent events, sorteret efter dato (events uden dato kommer sidst)
+const events = await fetch(url + "Events?select=*&order=dato.asc", options).then((res) => res.json());
+const speakers = await fetch(url + "Speakers?select=*", options).then((res) => res.json());
+const upcoming = events.filter((event) => !isPast(event));
+
+// Talerens navn som titel (som i Figma), ellers eventets titel
+const rowTitle = (event) => speakers.find((s) => s.event_id === event.id)?.name ?? event.title;
+
+// Grupper efter måned: { "December": [...], "Date TBA": [...] }
+const months = {};
+for (const event of upcoming) {
+  const month = event.dato
+    ? new Date(event.dato).toLocaleDateString("en-GB", { month: "long" })
+    : "Date TBA";
+  (months[month] ??= []).push(event);
+}
+
+const formats = ["Talk", "Meetup", "Skill sharing", "Social"];
+---
+
+<Layout title="Events">
+
+  <section class="programme" aria-labelledby="programme-title">
+    <h1 class="visually-hidden" id="programme-title">Events</h1>
+
+    <!-- Filter: [ ALL ] [ TALK ] [ MEETUP ] … -->
+    <div class="filters" role="group" aria-label="Filter by format">
+      <button class="filter slot is-active" data-filter="all" aria-pressed="true"><span>All</span></button>
+      {formats.map((format) => (
+        <button class="filter slot" data-filter={format} aria-pressed="false"><span>{format}</span></button>
+      ))}
+    </div>
+
+    {Object.entries(months).map(([month, events]) => (
+      <div class="month">
+        <h2 class="month__title"><span class="highlight">{month}</span></h2>
+        <ul class="events__list">
+          {events.map((event) => (
+            <li class="events__item" data-format={event.format}>
+              <EventRow
+                date={dateLabel(event.dato)}
+                format={event.format}
+                title={rowTitle(event)}
+                subtitle={event.venue && `${shortTime(event.time) ?? ""} · ${event.venue}`}
+                image={event.image && imgurl + event.image}
+                href={eventLink(event)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+
+  <section class="next-step">
+    <h2 class="next-step__title">Curious what earlier events looked like?</h2>
+    <a class="link" href="/past-events">Past events →</a>
+  </section>
+
+</Layout>
+
+<script>
+  // Filtrér listen efter format. Måneder uden synlige events skjules.
+  const buttons = document.querySelectorAll(".filter");
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.filter;
+      buttons.forEach((b) => {
+        b.classList.toggle("is-active", b === button);
+        b.setAttribute("aria-pressed", String(b === button));
+      });
+      document.querySelectorAll(".events__item").forEach((item) => {
+        item.hidden = filter !== "all" && item.dataset.format !== filter;
+      });
+      document.querySelectorAll(".month").forEach((month) => {
+        month.hidden = !month.querySelector(".events__item:not([hidden])");
+      });
+    });
+  });
+</script>
+
+<style>
+  /* MOBILE FIRST – desktop fra 769px (Desktop_Programme i Figma) */
+  .programme, .next-step { padding-inline: max(var(--gutter), calc((100% - 1392px) / 2)); }
+  .programme { display: flex; flex-direction: column; gap: 32px; padding-block: 24px 48px; }
+  ul { list-style: none; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px 12px; }
+  .filter {
+    background: none; border: 0; color: var(--ink); cursor: pointer; font: inherit;
+    font-size: 14px; line-height: 1.3; gap: 4px; padding: 0;
+  }
+  .filter::before, .filter::after { width: 4px; border-width: 1.5px; }
+  .filter span { padding: 0 2px; }
+  .filter.is-active span { background: var(--ink); color: var(--off-white); }
+
+  .month { display: flex; flex-direction: column; gap: 16px; }
+  .month[hidden] { display: none; }
+  .month__title { font-size: clamp(22px, 1.9vw, 28px); line-height: 1.2; letter-spacing: 0; }
+  .events__list { border-top: 1.5px solid var(--ink); }
+  .events__item { border-bottom: 1.5px solid var(--ink); }
+
+  .next-step { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding-block: 48px; }
+  .next-step__title { font-size: clamp(24px, 2.8vw, 40px); line-height: 1.1; letter-spacing: -0.02em; }
+
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  @media (min-width: 769px) {
+    .programme { gap: 40px; padding-block: 32px 96px; }
+    .filter { font-size: 15px; }
+    .next-step { padding-block: 64px 96px; gap: 24px; }
+  }
+</style>
