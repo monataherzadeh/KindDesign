@@ -1,0 +1,184 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Join us">
+
+  <section class="ft-hero" aria-labelledby="ft-hero-title">
+    <img
+      class="ft-hero__image"
+      src="/images/join-us-hero.jpg"
+      alt="A crowd of people at an event"
+    />
+    <div class="ft-hero__content">
+      <h1 class="ft-hero__title" id="ft-hero-title"><span class="highlight">First time?</span></h1>
+      <a class="button button--small button--light" href="/events">
+        <span>See the programme</span> <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="steps" aria-labelledby="steps-title">
+    <h2 class="section-label slot" id="steps-title">How an event goes</h2>
+
+    <ol class="steps__list">
+      <li class="steps__item">
+        <article class="step">
+          <p class="step__number slot">01</p>
+          <p class="step__text">
+            Find an event in the programme: a talk, a meetup, skill sharing or a social.
+          </p>
+        </article>
+      </li>
+      <li class="steps__item">
+        <article class="step">
+          <p class="step__number slot">02</p>
+          <p class="step__text">
+            Sign up on Luma. Time, place and everything else are on the event page.
+          </p>
+        </article>
+      </li>
+      <li class="steps__item">
+        <article class="step">
+          <p class="step__number slot">03</p>
+          <p class="step__text">
+            Come as you are, alone or with a friend. There's nothing to prepare.
+          </p>
+        </article>
+      </li>
+    </ol>
+  </section>
+
+  <section class="faq" aria-labelledby="faq-title">
+    <div class="faq__intro">
+      <h2 class="section-label slot" id="faq-title">Questions</h2>
+      <p class="faq__description">
+        Everything you might wonder before your first event.
+      </p>
+    </div>
+
+    <div class="faq__list">
+      <details class="faq__item" name="faq" open>
+        <summary class="faq__question">
+          <span class="faq__question-text">Can I come alone?</span>
+          <span class="faq__icon" aria-hidden="true"></span>
+        </summary>
+        <p class="faq__answer">
+          Yes. The events are made for meeting new people, so coming on your own is completely normal.
+        </p>
+      </details>
+
+      <details class="faq__item" name="faq">
+        <summary class="faq__question">
+          <span class="faq__question-text">Do I need to sign up?</span>
+          <span class="faq__icon" aria-hidden="true"></span>
+        </summary>
+        <p class="faq__answer"><!-- TODO: svar --></p>
+      </details>
+
+      <details class="faq__item" name="faq">
+        <summary class="faq__question">
+          <span class="faq__question-text">What does it cost?</span>
+          <span class="faq__icon" aria-hidden="true"></span>
+        </summary>
+        <p class="faq__answer"><!-- TODO: svar --></p>
+      </details>
+
+      <details class="faq__item" name="faq">
+        <summary class="faq__question">
+          <span class="faq__question-text">Which language is spoken?</span>
+          <span class="faq__icon" aria-hidden="true"></span>
+        </summary>
+        <p class="faq__answer"><!-- TODO: svar --></p>
+      </details>
+
+      <details class="faq__item" name="faq">
+        <summary class="faq__question">
+          <span class="faq__question-text">Is it accessible?</span>
+          <span class="faq__icon" aria-hidden="true"></span>
+        </summary>
+        <p class="faq__answer"><!-- TODO: svar --></p>
+      </details>
+    </div>
+  </section>
+
+  <section class="ready" aria-labelledby="ready-title">
+    <p class="section-label slot">Ready?</p>
+    <h2 class="ready__title" id="ready-title">Come for the events. Leave inspired.</h2>
+
+    <div class="ready__actions">
+      <a class="button button--small" href="/#next-event">
+        <span>See the next event</span> <span aria-hidden="true">→</span>
+      </a>
+      <a class="link" href="/events">
+        See the programme <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  /* MOBILE FIRST: grundreglerne er mobil (Mobil_ First time i Figma),
+     desktop tilføjes fra 769px (Desktop_First time). */
+  ol { list-style: none; }
+
+  .steps, .faq, .ready { padding-inline: max(var(--gutter), calc((100% - 1392px) / 2)); }
+
+  /* ---------- Hero: titel og knap i midten ---------- */
+  .ft-hero { position: relative; height: clamp(480px, 50vw, 720px); display: grid; place-items: center; }
+  .ft-hero__image { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .ft-hero__content { position: relative; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: var(--gutter); text-align: center; }
+  .ft-hero__title { font-size: clamp(48px, 7.2vw, 104px); line-height: 1.13; letter-spacing: -0.035em; }
+
+  /* ---------- Sådan foregår et event ---------- */
+  .steps { display: flex; flex-direction: column; gap: 24px; padding-block: 48px; }
+  .steps__list { display: grid; gap: 24px; }
+  .step { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 16px; border-top: 1.5px solid var(--ink); }
+  .step__number { font-size: 30px; line-height: 1.05; letter-spacing: -0.015em; gap: 4px; }
+  .step__text { font-size: 18px; line-height: 1.45; }
+
+  /* ---------- FAQ: <details> åbner/lukker uden JavaScript ---------- */
+  .faq { display: grid; gap: 24px; padding-bottom: 48px; }
+  .faq__intro { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .faq__description { font-size: 16px; line-height: 1.45; }
+  .faq__item { border-top: 1.5px solid var(--ink); }
+  .faq__item:last-child { border-bottom: 1.5px solid var(--ink); }
+  .faq__question {
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 16px 0; cursor: pointer; list-style: none;
+    font-size: clamp(20px, 1.9vw, 28px); font-weight: var(--font-weight-medium); line-height: 1.15;
+  }
+  .faq__question::-webkit-details-marker { display: none; }
+  /* Plus / minus tegnet med to streger */
+  .faq__icon { position: relative; flex: none; width: 14px; height: 14px; }
+  .faq__icon::before, .faq__icon::after { content: ""; position: absolute; background: currentColor; }
+  .faq__icon::before { left: 0; right: 0; top: 6px; height: 2px; }
+  .faq__icon::after { top: 0; bottom: 0; left: 6px; width: 2px; transition: transform 0.3s var(--ease-out); }
+  .faq__item[open] .faq__icon::after { transform: scaleY(0); }
+  .faq__answer { padding-bottom: 16px; font-size: 16px; line-height: 1.45; }
+  .faq__answer:empty { display: none; }
+
+  /* ---------- Klar? ---------- */
+  .ready {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 24px; padding-block: 48px;
+    /* linjen øverst følger indholdets bredde */
+    background: linear-gradient(var(--ink), var(--ink)) top center / min(1392px, calc(100% - 2 * var(--gutter))) 1.5px no-repeat;
+  }
+  .ready .section-label { font-size: 15px; gap: 4px; }
+  .ready .section-label::before, .ready .section-label::after { width: 4px; border-width: 1.5px; }
+  .ready__title { font-size: clamp(28px, 2.8vw, 40px); line-height: 1.1; letter-spacing: -0.02em; }
+  .ready__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }
+
+  /* ---------- Desktop (fra 769px) ---------- */
+  @media (min-width: 769px) {
+    .steps { gap: 32px; padding-block: 96px; }
+    .steps__list { grid-template-columns: repeat(3, 1fr); }
+    .step__text { font-size: 20px; }
+
+    .faq { grid-template-columns: 1fr 2fr; gap: 24px; padding-bottom: 96px; }
+    .faq__description { font-size: 18px; }
+
+    .ready { padding-block: 48px 96px; }
+  }
+</style>

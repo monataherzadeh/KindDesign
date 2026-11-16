@@ -1,39 +1,55 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Tag from "../components/Tag.astro";
+import EventRow from "../components/EventRow.astro";
+import EventCard from "../components/EventCard.astro";
+
+// De gentagne rækker og kort er lavet om til komponenter med props.
+// Indholdet senere hentes dataene fra Supabase.
+const upcoming = [
+  { date: "Date TBA", format: "Meetup", title: "Coming soon", image: "/images/upcoming-1.jpg", href: "https://www.instagram.com/kinddesign.cph/" },
+  { date: "Date TBA", format: "Skill sharing", title: "Coming soon", image: "/images/upcoming-2.jpg", href: "https://www.instagram.com/kinddesign.cph/" },
+  { date: "Date TBA", format: "Social", title: "Coming soon", image: "/images/upcoming-3.jpg", href: "https://www.instagram.com/kinddesign.cph/" },
+];
+
+const latest = [
+  { image: "/images/latest-1.jpg", alt: "People at the AI Skill sharing event", format: "Skill sharing", date: "Thu 29.10", title: "AI Skill sharing" },
+  { image: "/images/latest-2.jpg", alt: "People talking at the first meetup in Barcelona", format: "Meetup", date: "Thu 14.05", title: "First meetup in Barcelona" },
+  { image: "/images/latest-3.jpg", alt: "Guests listening to a talk at Kinddesign Talks", format: "Talk", date: "Thu 26.03", title: "Kinddesign Talks" },
+];
 ---
 
-<main>
+<Layout title="Home">
 
   <section class="hero" aria-labelledby="hero-title">
     <img
       class="hero__image"
-      src=" "
-      alt="Picture of event"
+      src="/images/hero.jpg"
+      alt="Smiling guests at a Kind Design event"
     />
     <div class="hero__content">
       <p class="hero__tag">A design community in Copenhagen</p>
       <h1 class="hero__title" id="hero-title">
-        For all kinds <br />of creative minds.
+        <span class="highlight">For all kinds <br />of creative minds.</span>
       </h1>
-      <a class="button button--small" href="#events">
-        See what's on <span aria-hidden="true">→</span>
+      <a class="button button--small button--light" href="#events">
+        <span>See what's on</span> <span aria-hidden="true">→</span>
       </a>
     </div>
   </section>
 
-  <section class="next-event" aria-labelledby="next-event-title">
-    <h2 class="section-label" id="next-event-title">[ Next event ]</h2>
+  <section class="next-event" id="next-event" aria-labelledby="next-event-title">
+    <h2 class="section-label slot" id="next-event-title">Next event</h2>
 
     <article class="next-event__card">
       <figure class="next-event__figure">
         <img
           class="next-event__image"
-          src=" "
-          alt="Picture of Rina Takikawa"
+          src="/images/next-event.jpg"
+          alt="Rina Takikawa smiling, sitting on a sofa"
         />
-        <figcaption class="next-event__speaker">Rina Takikawa</figcaption>
-        <span class="tag">[ Talk ]</span>
-        <span class="tag tag--date">Fri 21.11</span>
+        <figcaption class="next-event__speaker"><span class="highlight">Rina Takikawa</span></figcaption>
+        <span class="next-event__tag"><Tag format="Talk" date="Fri 21.11" /></span>
       </figure>
 
       <div class="next-event__info">
@@ -64,9 +80,9 @@ import Layout from "../layouts/Layout.astro";
 
         <div class="next-event__actions">
           <a class="button" href="#">
-            Sign up on Peatix <span aria-hidden="true">→</span>
+            <span>Sign up on Peatix</span> <span aria-hidden="true">→</span>
           </a>
-          <a class="link" href="#">Add to calendar <span aria-hidden="true">+</span></a>
+          <a class="link" href="#">Add to calendar <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </article>
@@ -74,94 +90,40 @@ import Layout from "../layouts/Layout.astro";
 
   <section class="events" id="events" aria-labelledby="events-title">
     <header class="section-header">
-      <h2 class="section-label" id="events-title">[ Events ]</h2>
+      <h2 class="section-label slot" id="events-title">Events</h2>
       <a class="link" href="/events">All meet-ups →</a>
     </header>
 
     <ul class="events__list">
-      <li class="events__item">
-        <article class="event-row">
-          <div class="event-row__meta">
-            <p class="event-row__date">Date TBA</p>
-            <span class="tag">[ Meetup ]</span>
-          </div>
-          <h3 class="event-row__title">Coming soon</h3>
-          <a class="link event-row__link" href="#">Details on Instagram</a>
-        </article>
-      </li>
-
-      <li class="events__item">
-        <article class="event-row">
-          <div class="event-row__meta">
-            <p class="event-row__date">Date TBA</p>
-            <span class="tag">[ Skill sharing ]</span>
-          </div>
-          <h3 class="event-row__title">Coming soon</h3>
-          <a class="link event-row__link" href="#">Details on Instagram</a>
-        </article>
-      </li>
-
-      <li class="events__item">
-        <article class="event-row">
-          <div class="event-row__meta">
-            <p class="event-row__date">Date TBA</p>
-            <span class="tag">[ Social ]</span>
-          </div>
-          <h3 class="event-row__title">Coming soon</h3>
-          <a class="link event-row__link" href="#">Details on Instagram</a>
-        </article>
-      </li>
+      {upcoming.map((event) => (
+        <li class="events__item">
+          <EventRow {...event} />
+        </li>
+      ))}
     </ul>
   </section>
 
   <section class="latest" aria-labelledby="latest-title">
     <header class="section-header">
-      <h2 class="section-label" id="latest-title">[ Latest events ]</h2>
-      <a class="link" href="/events/past">Past events →</a>
+      <h2 class="section-label slot" id="latest-title">Latest events</h2>
+      <a class="link" href="/past-events">Past events →</a>
     </header>
 
     <ul class="latest__list">
-      <li class="latest__item">
-        <a class="card" href="#">
-          <img class="card__image" src="/images/latest-1.jpg" alt="Picture of people at event" />
-          <div class="card__tags">
-            <span class="tag">[ Skill sharing ]</span>
-            <span class="tag tag--date">Thu 29.10</span>
-          </div>
-          <h3 class="card__title">AI Skill sharing</h3>
-        </a>
-      </li>
-
-      <li class="latest__item">
-        <a class="card" href="#">
-          <img class="card__image" src=" " alt="Picture of people at event" />
-          <div class="card__tags">
-            <span class="tag">[ Meetup ]</span>
-            <span class="tag tag--date">Thu 14.05</span>
-          </div>
-          <h3 class="card__title">First meetup in Barcelona</h3>
-        </a>
-      </li>
-
-      <li class="latest__item">
-        <a class="card" href="#">
-          <img class="card__image" src=" " alt="Picture of people at event" />
-          <div class="card__tags">
-            <span class="tag">[ Talk ]</span>
-            <span class="tag tag--date">Thu 26.03</span>
-          </div>
-          <h3 class="card__title">Kinddesign Talks</h3>
-        </a>
-      </li>
+      {latest.map((event) => (
+        <li class="latest__item">
+          <EventCard {...event} />
+        </li>
+      ))}
     </ul>
   </section>
 
   <section class="community" aria-labelledby="community-title">
-    <p class="section-label">[ Community ]</p>
+    <p class="section-label slot">Community</p>
 
     <div class="community__content">
       <h2 class="community__title" id="community-title">
-        Not just another <br />networking event.
+        <span class="highlight">Not just another <br />networking event.</span>
       </h2>
 
       <div class="community__body">
@@ -169,14 +131,14 @@ import Layout from "../layouts/Layout.astro";
           A community for all kinds of designers and creatives to share ideas,
           build connections and spark inspiration.
         </p>
-        <a class="button button--small" href="#">
-          Join us <span aria-hidden="true">→</span>
+        <a class="button button--small" href="/join-us">
+          <span>Join us</span> <span aria-hidden="true">→</span>
         </a>
       </div>
 
       <img
         class="community__image"
-        src=" "
+        src="/images/community.jpg"
         alt="People talking at an event"
       />
     </div>
@@ -185,20 +147,20 @@ import Layout from "../layouts/Layout.astro";
   <section class="first-time" aria-labelledby="first-time-title">
     <img
       class="first-time__image"
-      src=" "
+      src="/images/first-time.jpg"
       alt="A crowd of people at an event"
     />
     <div class="first-time__content">
-      <h2 class="first-time__title" id="first-time-title">First time?</h2>
+      <h2 class="first-time__title" id="first-time-title"><span class="highlight">First time?</span></h2>
       <p class="first-time__text">Come alone, bring a friend. Here is what to expect.</p>
-      <a class="button button--small" href="#">
-        How an event goes <span aria-hidden="true">→</span>
+      <a class="button button--small button--light" href="/join-us">
+        <span>How an event goes</span> <span aria-hidden="true">→</span>
       </a>
     </div>
   </section>
 
   <section class="get-involved" aria-labelledby="get-involved-title">
-    <h2 class="section-label" id="get-involved-title">[ Be part of it ]</h2>
+    <h2 class="section-label slot" id="get-involved-title">Be part of it</h2>
 
     <ul class="get-involved__list">
       <li class="get-involved__item">
@@ -208,8 +170,8 @@ import Layout from "../layouts/Layout.astro";
           <p class="involve-card__text">
             Come to your first meet-up. Bring a friend or come alone.
           </p>
-          <a class="button button--small" href="#events">
-            See the next event <span aria-hidden="true">→</span>
+          <a class="button button--small" href="#next-event">
+            <span>See the next event</span> <span aria-hidden="true">→</span>
           </a>
         </article>
       </li>
@@ -221,8 +183,8 @@ import Layout from "../layouts/Layout.astro";
           <p class="involve-card__text">
             Help us create something for Copenhagen's creative community.
           </p>
-          <a class="button button--small button--outline" href="#">
-            Become a volunteer <span aria-hidden="true">→</span>
+          <a class="button button--small button--outline" href="/about">
+            <span>Become a volunteer</span> <span aria-hidden="true">→</span>
           </a>
         </article>
       </li>
@@ -234,12 +196,127 @@ import Layout from "../layouts/Layout.astro";
           <p class="involve-card__text">
             Have an idea, space or project? Let's make it happen.
           </p>
-          <a class="button button--small button--outline" href="#">
-            Explore partnerships <span aria-hidden="true">→</span>
+          <a class="button button--small button--outline" href="/about">
+            <span>Explore partnerships</span> <span aria-hidden="true">→</span>
           </a>
         </article>
       </li>
     </ul>
   </section>
 
-</main>
+</Layout>
+
+<style>
+  /* MOBILE FIRST,
+     desktop tilføjes fra 769px (Desktop_Forside)*/
+
+  /*  Fælles: sektioner, overskrifter, lister  */
+  .next-event, .events, .latest, .community, .first-time, .get-involved {
+    /* indholdet er max 1392px bredt, baggrunde går helt ud */
+    padding-inline: max(var(--gutter), calc((100% - 1392px) / 2));
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .section-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  ul { list-style: none; }
+
+  /*  Hero  */
+  .hero { position: relative; height: clamp(560px, 60vw, 864px); display: flex; align-items: flex-end; }
+  .hero__image { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hero__content {
+    position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+    padding: 0 var(--gutter) var(--gutter);
+  }
+  .hero__tag { background: var(--off-white); padding: 4px 8px; font-size: 14px; font-weight: var(--font-weight-medium); line-height: 1.45; }
+  .hero__title { font-size: clamp(40px, 7.2vw, 104px); line-height: 1.13; letter-spacing: -0.035em; }
+
+  /*  Next event: kortet har formatets farve (Talk = blå)  */
+  .next-event { padding-block: 48px; }
+  .next-event__card { display: grid; gap: 24px; padding: 16px; background: var(--talk); }
+  .next-event__figure { position: relative; }
+  .next-event__image { width: 100%; aspect-ratio: 4 / 3; }
+  .next-event__tag { position: absolute; top: 8px; left: 8px; }
+  .next-event__speaker {
+    position: absolute; left: 8px; bottom: 8px;
+    font-size: clamp(28px, 3.9vw, 56px); font-weight: var(--font-weight-medium); line-height: 1.07; letter-spacing: -0.015em;
+  }
+  .next-event__info { display: flex; flex-direction: column; gap: 24px; }
+  .next-event__title { font-size: clamp(24px, 2.2vw, 32px); line-height: 1; letter-spacing: -0.015em; }
+  .next-event__description { font-size: 16px; line-height: 1.45; }
+  .details { border-bottom: 1.5px solid var(--ink); }
+  .details__row { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-top: 1.5px solid var(--ink); font-size: 15px; line-height: 1.45; }
+  .details dd { font-weight: var(--font-weight-medium); text-align: right; }
+  .next-event__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }
+
+  /*  Events (liste med EventRow)  */
+  .events { padding-bottom: 48px; }
+  .events__list { border-top: 1.5px solid var(--ink); }
+  .events__item { border-bottom: 1.5px solid var(--ink); }
+
+  /*  Latest events (kort med EventCard) 
+     Mobil: kortene kan swipes vandret. Desktop: tre kolonner. */
+  .latest { padding-bottom: 48px; }
+  .latest__list {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 80%; gap: 16px;
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  }
+  .latest__item { scroll-snap-align: start; }
+
+  /*  Community  */
+  .community { background: var(--surface); padding-block: 48px; }
+  .community__content { display: grid; gap: 24px; }
+  .community__title { font-size: clamp(40px, 7.2vw, 104px); line-height: 1.13; letter-spacing: -0.03em; }
+  .community__body { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
+  .community__text {
+    font-size: clamp(22px, 2.8vw, 40px); font-weight: var(--font-weight-medium); line-height: 1.15; letter-spacing: -0.015em;
+    padding-bottom: 24px; border-bottom: 1.5px solid var(--ink); align-self: stretch;
+  }
+  .community__image { width: 100%; aspect-ratio: 3 / 2; }
+
+  /*  First time  */
+  .first-time { position: relative; padding-block: 48px; }
+  .first-time__image { width: 100%; height: clamp(420px, 39vw, 560px); }
+  .first-time__content {
+    position: absolute; inset: 48px var(--gutter);
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; text-align: center;
+  }
+  .first-time__title { font-size: clamp(40px, 6.1vw, 88px); line-height: 1.13; letter-spacing: -0.035em; }
+  .first-time__text { background: var(--off-white); padding: 4px 8px; font-size: 14px; line-height: 1.45; }
+
+  /*  Be part of it  */
+  .get-involved { padding-block: 48px; }
+  .get-involved__list { display: grid; gap: 40px; }
+  .involve-card { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 16px; border-top: 1.5px solid var(--ink); }
+  .involve-card__number { background: var(--ink); color: var(--off-white); padding: 0 6px; font-size: 16px; font-weight: var(--font-weight-medium); line-height: 1.45; }
+  .involve-card__title { font-size: clamp(32px, 3.9vw, 56px); line-height: 1; letter-spacing: -0.015em; }
+  .involve-card__text { font-size: 18px; line-height: 1.45; }
+
+  /*  Desktop (fra 769px)  */
+  @media (min-width: 769px) {
+    .next-event, .events, .latest, .community, .first-time, .get-involved { gap: 32px; }
+    .hero__content { gap: 16px; }
+    .hero__tag { font-size: 22px; padding: 6px 12px; }
+
+    .next-event { padding-block: 96px; }
+    .next-event__card { grid-template-columns: 1fr 1fr; gap: 32px; padding: 32px; }
+    .next-event__image { aspect-ratio: auto; height: 100%; min-height: 480px; }
+    .next-event__description { font-size: 18px; }
+
+    .events, .latest { padding-bottom: 96px; }
+
+    .latest__list { grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); gap: 24px; overflow: visible; }
+
+    .community { padding-block: 96px; gap: 48px; }
+    .community__content { grid-template-columns: 1fr 1fr; column-gap: 24px; row-gap: 48px; }
+    .community__title { grid-column: 1 / -1; }
+    .community__body { gap: 32px; }
+    .community__text { padding-bottom: 32px; }
+
+    .first-time { padding-block: 96px; }
+    .first-time__content { inset: 96px var(--gutter); gap: 16px; }
+    .first-time__text { font-size: 18px; }
+
+    .get-involved { padding-block: 96px; }
+    .get-involved__list { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .involve-card__text { font-size: 20px; }
+  }
+</style>
