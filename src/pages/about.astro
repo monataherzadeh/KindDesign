@@ -7,7 +7,7 @@ import Layout from "../layouts/Layout.astro";
   <section class="about-hero" aria-labelledby="about-hero-title">
     <img
       class="about-hero__image"
-      src="/images/about-hero.jpg"
+      src="/images/about-hero.webp"
       alt="A full room of guests listening to a talk at a Kind Design event"
     />
     <h1 class="about-hero__title" id="about-hero-title">
@@ -31,7 +31,7 @@ import Layout from "../layouts/Layout.astro";
       <div class="about-row__content">
         <img
           class="team__image"
-          src="/images/about-team.jpg"
+          src="/images/about-team.webp"
           alt="Julia and Jeremy talking with a guest at an event"
         />
 
@@ -137,7 +137,7 @@ import Layout from "../layouts/Layout.astro";
   .about-hero { position: relative; height: clamp(480px, 50vw, 720px); display: flex; align-items: flex-end; }
   .about-hero__image { position: absolute; inset: 0; width: 100%; height: 100%; }
   .about-hero__title {
-    position: relative; padding: 0 var(--gutter) var(--gutter);
+       position: relative; padding: 0 max(var(--gutter), calc((100% - 1392px) / 2)) var(--gutter);
     font-size: clamp(28px, 3.9vw, 56px); line-height: 1.1; letter-spacing: -0.015em;
   }
 
