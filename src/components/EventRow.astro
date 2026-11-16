@@ -3,15 +3,21 @@
 //   eventets foto toner frem i sort/hvid, de andre rækker slører.
 // Senere kommer dataene fra Supabase.
 import Tag from "./Tag.astro";
-const { date, format, title, image, href = "#", linkText = "Details on Instagram" } = Astro.props;
+const { date, format, title, subtitle, image, href = "#", linkText } = Astro.props;
+// Internt link (detaljeside) → titlen bliver et link. Eksternt → "Details on Instagram"
+const isInternal = href.startsWith("/");
+const label = linkText ?? (isInternal ? "See the event →" : "Details on Instagram");
 ---
 <article class="event-row">
   <div class="event-row__meta">
     <p class="event-row__date">{date}</p>
     <Tag format={format} />
   </div>
-  <h3 class="event-row__title">{title}</h3>
-  <a class="link event-row__link" href={href}>{linkText}</a>
+  <div class="event-row__main">
+    <h3 class="event-row__title">{isInternal ? <a href={href}>{title}</a> : title}</h3>
+    {subtitle && <p class="event-row__subtitle">{subtitle}</p>}
+  </div>
+  <a class="link event-row__link" href={href}>{label}</a>
   {image && <img class="event-row__photo" src={image} alt="" aria-hidden="true" loading="lazy" />}
 </article>
 
@@ -22,23 +28,27 @@ const { date, format, title, image, href = "#", linkText = "Details on Instagram
   .event-row__meta :global(.tag) { padding: 0; background: none; }
   .event-row__date { font-size: 18px; font-weight: var(--font-weight-medium); line-height: 1.45; }
   .event-row__title { font-size: 36px; line-height: 1; letter-spacing: -0.035em; }
+  .event-row__main { display: flex; flex-direction: column; gap: 8px; }
+  .event-row__title a { text-decoration: none; }
+  .event-row__subtitle { font-size: 15px; line-height: 1.45; }
   .event-row__link { font-size: 15px; font-weight: var(--font-weight-regular); text-decoration: none; }
   .event-row__photo { display: none; }
 
-  /* Desktop: dato | titel med lodret streg | link, som i Figma */
+  /* Desktop: dato | titel med lodret streg | */
   @media (min-width: 769px) {
     .event-row { grid-template-columns: 212px 1fr 212px; gap: 24px; align-items: start; }
     .event-row__date { font-size: 20px; }
-    .event-row__title { font-size: clamp(48px, 6.1vw, 88px); border-left: 1.5px solid var(--ink); padding-left: 24px; }
+    .event-row__main { border-left: 1.5px solid var(--ink); padding-left: 24px; }
+    .event-row__title { font-size: clamp(48px, 6.1vw, 88px); }
   }
 
-  /* ---------- Hover-effekten (kun med mus, desktop) ---------- */
+  /*  Hover-effekten (kun med mus, desktop)  */
   @media (min-width: 769px) and (hover: hover) {
     .event-row__title, .event-row__link {
       transition: color 0.2s var(--ease-out), text-shadow 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
     }
 
-    /* Fotoet: skjult, sløret og lidt mindre. Sort/hvid med +12 % kontrast som i Figma */
+    /* Fotoet: skjult, sløret og lidt mindre.  */
     .event-row__photo {
       display: block; position: absolute; z-index: 1; pointer-events: none;
       left: 57%; top: 50%; width: 23%; aspect-ratio: 3 / 2;
@@ -47,7 +57,7 @@ const { date, format, title, image, href = "#", linkText = "Details on Instagram
       transform: translateY(-50%) scale(0.875);
       transition: opacity 0.2s var(--ease-out), filter 0.2s var(--ease-out), transform 0.2s var(--ease-out);
     }
-    /* Ind: 0,12 s, ligesom Smart Animate i prototypen */
+    /* animation */
     .event-row:hover .event-row__photo {
       opacity: 1;
       filter: grayscale(1) contrast(1.12) blur(0);

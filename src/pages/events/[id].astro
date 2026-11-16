@@ -1,0 +1,228 @@
+---
+// /events/[id] – single page for ét event (som "Astro single pages" slides).
+// getStaticPaths() laver én statisk side pr. række i tabellen "Events".
+//   Kommende event → event-panelet 
+//   Tidligere event → recap 
+import Layout from "../../layouts/Layout.astro";
+import Tag from "../../components/Tag.astro";
+import { url, options, imgurl, dateLabel, isPast, formatColors } from "../../lib/supabase.js";
+
+export async function getStaticPaths() {
+  // Hent de tre tabeller (events, talere og partnere)
+  const events = await fetch(url + "Events?select=*&order=dato.asc", options).then((res) => res.json());
+  const speakers = await fetch(url + "Speakers?select=*&order=sort_order.asc", options).then((res) => res.json());
+  const partners = await fetch(url + "partners?select=*", options).then((res) => res.json());
+
+  const nextEvent = events.find((e) => e.dato && !isPast(e));
+
+  return events.map((post) => {
+    return {
+      params: { id: String(post.id) },
+      props: {
+        post,
+        speakers: speakers.filter((s) => s.event_id === post.id),   // talere til dette event
+        partner: partners.find((p) => p.id === post.partner_id),     // partner til dette event
+        nextEvent,
+      },
+    };
+  });
+}
+
+const { post, speakers, partner, nextEvent } = Astro.props;
+const past = isPast(post);
+const name = speakers[0]?.name ?? post.title;   // navnet i highlight på billedet
+const backHref = past ? "/past-events" : "/events";
+// gallery kan være et jsonb-array ["a.jpg","b.jpg"] eller tekst "a.jpg, b.jpg"
+const gallery = typeof post.gallery === "string" ? post.gallery.split(",").map((f) => f.trim()) : post.gallery;
+---
+
+<Layout title={post.title}>
+  <article class="event" style={`--format-color: ${formatColors[post.format] ?? "var(--surface)"}`}>
+
+    <!-- Topbar: [ FORMAT ] dato … [ CLOSE ] -->
+    <header class="event__bar">
+      <div class="event__meta">
+        <Tag format={post.format} />
+        <span>{past ? `Past event · ${dateLabel(post.dato)}` : dateLabel(post.dato)}</span>
+        {partner && (
+          <span class="event__partner">{post.partner_role} <span class="slot">{partner.name}</span></span>
+        )}
+      </div>
+      <a class="event__close slot" href={backHref} aria-label="Close and go back">Close</a>
+    </header>
+
+    <!-- Stort foto med navn i highlight -->
+    <figure class="event__hero">
+      {post.image && <img src={imgurl + post.image} alt={`${post.title}, ${post.format?.toLowerCase()} by Kind Design`} />}
+      <h1 class="event__name"><span class="highlight">{past ? post.title : name}</span></h1>
+    </figure>
+
+    <!-- Kommende event -->
+    {!past && (
+      <div class="event__body">
+        <div class="event__intro">
+          <h2 class="event__title">{post.title}</h2>
+          {post.description && <p class="event__text">{post.description}</p>}
+        </div>
+
+        <div class="event__facts">
+          <dl class="details">
+            {post.time && <div class="details__row"><dt>Time</dt><dd>{post.time}</dd></div>}
+            {post.venue && <div class="details__row"><dt>Place</dt><dd>{post.venue}</dd></div>}
+            {post.price && <div class="details__row"><dt>Price</dt><dd>{post.price}</dd></div>}
+            {post.language && <div class="details__row"><dt>Language</dt><dd>{post.language}</dd></div>}
+          </dl>
+          {(post.signup_label || post.signup_url) && (
+            <div class="event__actions">
+              <a class="button" href={post.signup_url ?? "#"}>
+                <span>{post.signup_label ?? "Sign up"}</span> <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+
+    {!past && post.agenda && (
+      <section class="schedule" aria-labelledby="schedule-title">
+        <h2 class="section-label slot" id="schedule-title">How the event goes</h2>
+        <ol class="schedule__list">
+          {post.agenda.map((step) => (
+            <li class="schedule__row"><span>{step.time}</span> <span>{step.item}</span></li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    <!--  Recap (tidligere event)  -->
+    {past && (
+      <div class="event__body">
+        <div class="event__intro">
+          {post.recap_title && <h2 class="event__title">{post.recap_title}</h2>}
+          {post.recap_text && <p class="event__text">{post.recap_text}</p>}
+          {post.photo_credit && <p class="event__credit">{post.photo_credit}</p>}
+        </div>
+        {gallery && (
+          <ul class="gallery">
+            {gallery.map((file) => (
+              <li><img src={imgurl + file} alt={`Moment from ${post.title}`} loading="lazy" /></li>
+            ))}
+          </ul>
+        )}
+      </div>
+    )}
+
+    {past && speakers.length > 0 && (
+      <section class="speakers" aria-labelledby="speakers-title">
+        <h2 class="section-label slot" id="speakers-title">Speakers</h2>
+        <ol class="speakers__list">
+          {speakers.map((speaker, i) => (
+            <li class="speaker">
+              <div class="speaker__left">
+                <p class="speaker__no">{String(i + 1).padStart(2, "0")}</p>
+                {speaker.portrait && <img class="speaker__image" src={imgurl + speaker.portrait} alt={`${speaker.name} speaking`} loading="lazy" />}
+              </div>
+              <h3 class="speaker__name">{speaker.name}</h3>
+              <div class="speaker__talk">
+                {speaker.talk_title && <p class="speaker__title">{speaker.talk_title}</p>}
+                {speaker.talk_subtitle && <p class="speaker__subtitle">{speaker.talk_subtitle}</p>}
+                {speaker.bio && <p class="speaker__bio">{speaker.bio}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    {past && nextEvent && (
+      <footer class="next">
+        <p class="next__label">Next meet-up</p>
+        <a class="next__link" href={`/events/${nextEvent.id}`}>
+          <Tag format={nextEvent.format} /> {dateLabel(nextEvent.dato)} · {nextEvent.title}
+        </a>
+      </footer>
+    )}
+
+  </article>
+</Layout>
+
+<style>
+  /* MOBILE FIRST */
+  .event {
+    background: var(--format-color);
+    display: flex; flex-direction: column; gap: 24px;
+    padding: 16px max(var(--gutter), calc((100% - 1392px) / 2)) 48px;
+  }
+  ol, ul { list-style: none; }
+
+  /* Topbar */
+  .event__bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 12px; border-bottom: 1.5px solid var(--ink); }
+  .event__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; font-size: 15px; font-weight: var(--font-weight-medium); }
+  .event__meta :global(.tag) { padding: 0; background: none; }
+  .event__partner { font-size: 13px; font-weight: var(--font-weight-regular); display: inline-flex; align-items: center; gap: 6px; }
+  .event__partner .slot { gap: 3px; font-weight: var(--font-weight-medium); text-transform: uppercase; }
+  .event__partner .slot::before, .event__partner .slot::after, .event__close::before, .event__close::after { width: 4px; border-width: 1.5px; }
+  .event__close { font-size: 13px; text-transform: uppercase; text-decoration: none; gap: 4px; }
+
+  /* Foto */
+  .event__hero { position: relative; }
+  .event__hero img { width: 100%; aspect-ratio: 4 / 3; }
+  .event__name {
+    position: absolute; left: 8px; bottom: 8px;
+    font-size: clamp(32px, 5.6vw, 80px); line-height: 1.1; letter-spacing: -0.015em;
+  }
+
+  /* Tekst + fakta */
+  .event__body { display: grid; gap: 24px; }
+  .event__intro { display: flex; flex-direction: column; gap: 12px; }
+  .event__title { font-size: clamp(24px, 2.2vw, 32px); line-height: 1.1; letter-spacing: -0.015em; }
+  .event__text { font-size: 16px; line-height: 1.45; max-width: 52ch; }
+  .event__credit { font-size: 12px; }
+  .event__facts { display: flex; flex-direction: column; gap: 24px; }
+  .details { border-bottom: 1.5px solid var(--ink); }
+  .details__row { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-top: 1.5px solid var(--ink); font-size: 14px; line-height: 1.45; }
+  .details dd { font-weight: var(--font-weight-medium); text-align: right; }
+  .event__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }
+
+  /* Program (agenda) */
+  .schedule { display: flex; flex-direction: column; gap: 16px; }
+  .schedule__list { border-bottom: 1.5px solid var(--ink); }
+  .schedule__row { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 8px 0; border-top: 1.5px solid var(--ink); font-size: 14px; line-height: 1.45; }
+
+  /* Galleri (recap) */
+  .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .gallery img { width: 100%; aspect-ratio: 3 / 2; }
+
+  /* Talere (recap) */
+  .speakers { display: flex; flex-direction: column; gap: 16px; }
+  .speakers__list { border-bottom: 1.5px solid var(--ink); }
+  .speaker { display: grid; gap: 12px; padding: 16px 0; border-top: 1.5px solid var(--ink); }
+  .speaker__left { display: flex; flex-direction: column; gap: 8px; }
+  .speaker__no { font-size: 14px; }
+  .speaker__image { width: 160px; aspect-ratio: 3 / 2; }
+  .speaker__name { font-size: clamp(28px, 2.5vw, 36px); line-height: 1; letter-spacing: -0.015em; }
+  .speaker__talk { display: flex; flex-direction: column; gap: 6px; }
+  .speaker__title { font-size: 16px; font-weight: var(--font-weight-medium); }
+  .speaker__subtitle { font-size: 14px; }
+  .speaker__bio { font-size: 13px; line-height: 1.45; }
+
+  /* Næste event */
+  .next { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1.5px solid var(--ink); }
+  .next__label { font-size: 12px; }
+  .next__link { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: var(--font-weight-medium); text-decoration: none; }
+  .next__link :global(.tag) { padding: 0; background: none; }
+
+  /*  Desktop (fra 769px)  */
+  @media (min-width: 769px) {
+    .event { gap: 32px; padding-top: 24px; padding-bottom: 64px; }
+    .event__hero img { aspect-ratio: 21 / 9; }
+    .event__name { left: 16px; bottom: 16px; }
+    .event__body { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .event__text { font-size: 18px; }
+    .details__row { font-size: 15px; }
+    .schedule__row { grid-template-columns: 120px 1fr; font-size: 15px; }
+    .speaker { grid-template-columns: 200px 1fr 1fr; gap: 24px; align-items: start; }
+    .speaker__name { border-left: 1.5px solid var(--ink); padding-left: 16px; }
+    .speaker__image { width: 100%; }
+  }
+</style>
