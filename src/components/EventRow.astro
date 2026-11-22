@@ -1,14 +1,19 @@
 ---
 // EventRow: én række i event-listen (forsiden). Komponent med props.
-//   eventets foto toner frem i sort/hvid, de andre rækker slører.
+//   rækken får formatets farve, eventets foto toner frem i sort/hvid,
+//   og de andre rækker slører.
 // Senere kommer dataene fra Supabase.
 import Tag from "./Tag.astro";
 const { date, format, title, subtitle, image, href = "#", linkText } = Astro.props;
 // Internt link (detaljeside) → titlen bliver et link. Eksternt → "Details on Instagram"
 const isInternal = href.startsWith("/");
+
+// Formatets farve – rækken får den ved hover (samme farver som Tag)
+const colors = { "talk": "var(--talk)", "meetup": "var(--meetup)", "skill sharing": "var(--skill)", "social": "var(--social)" };
+const color = colors[format?.toLowerCase()] ?? "var(--surface)";
 const label = linkText ?? (isInternal ? "See the event →" : "Details on Instagram");
 ---
-<article class="event-row">
+<article class="event-row" style={`--row-color: ${color}`}>
   <div class="event-row__meta">
     <p class="event-row__date">{date}</p>
     <Tag format={format} />
@@ -45,8 +50,17 @@ const label = linkText ?? (isInternal ? "See the event →" : "Details on Instag
   /*  Hover-effekten (kun med mus, desktop)  */
   @media (min-width: 769px) and (hover: hover) {
     .event-row__title, .event-row__link {
-      transition: color 0.2s var(--ease-out), text-shadow 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
+      transition: color 0.4s var(--ease-out), text-shadow 0.4s var(--ease-out), opacity 0.4s var(--ease-out);
     }
+
+    /* Formatets farve bag rækken (lidt bredere end teksten, så den får luft) */
+    .event-row { isolation: isolate; }
+    .event-row::before {
+      content: ""; position: absolute; z-index: -1; inset: 0 -16px;
+      background: var(--row-color); opacity: 0;
+      transition: opacity 0.4s var(--ease-out);
+    }
+    .event-row:hover::before { opacity: 1; }
 
     /* Fotoet: skjult, sløret og lidt mindre.  */
     .event-row__photo {
@@ -55,14 +69,14 @@ const label = linkText ?? (isInternal ? "See the event →" : "Details on Instag
       opacity: 0;
       filter: grayscale(1) contrast(1.12) blur(12px);
       transform: translateY(-50%) scale(0.875);
-      transition: opacity 0.2s var(--ease-out), filter 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+      transition: opacity 0.4s var(--ease-out), filter 0.4s var(--ease-out), transform 0.4s var(--ease-out);
     }
     /* animation */
     .event-row:hover .event-row__photo {
       opacity: 1;
       filter: grayscale(1) contrast(1.12) blur(0);
       transform: translateY(-50%) scale(1);
-      transition-duration: 0.3s; transition-delay: 0.12s;
+      transition-duration: 0.6s; transition-delay: 0.15s;
     }
   }
 </style>
@@ -73,10 +87,10 @@ const label = linkText ?? (isInternal ? "See the event →" : "Details on Instag
   @media (min-width: 769px) and (hover: hover) {
     /* Kun teksten slører (ikke den lodrette streg): gennemsigtig tekst + sløret skygge */
     .events__list:has(.event-row:hover) .event-row:not(:hover) .event-row__title {
-      color: transparent; text-shadow: 0 0 8px var(--ink); transition-duration: 0.12s;
+      color: transparent; text-shadow: 0 0 8px var(--ink); transition-duration: 0.3s;
     }
     .events__list:has(.event-row:hover) .event-row:not(:hover) .event-row__link {
-      color: transparent; text-shadow: 0 0 4px var(--ink); opacity: 0.85; transition-duration: 0.12s;
+      color: transparent; text-shadow: 0 0 4px var(--ink); opacity: 0.85; transition-duration: 0.3s;
     }
   }
 </style>
