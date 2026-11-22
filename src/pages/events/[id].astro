@@ -211,6 +211,8 @@ const gallery = typeof post.gallery === "string" ? post.gallery.split(",").map((
   .next__label { font-size: 12px; }
   .next__link { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: var(--font-weight-medium); text-decoration: none; }
   .next__link :global(.tag) { padding: 0; background: none; }
+    .speakers + .next { border-top: 0; padding-top: 0; }
+
 
   /*  Desktop (fra 769px)  */
   @media (min-width: 769px) {
