@@ -59,7 +59,7 @@ const partnerName = (event) => partners.find((p) => p.id === event.partner_id)?.
     <section class="next-step" aria-labelledby="next-title">
       <p class="next-step__label slot">What's next</p>
       <h2 class="next-step__title" id="next-title">Next up: {dateLabel(nextEvent.dato)} · {nextEvent.title}</h2>
-      <a class="button button--light" href="/events">
+            <a class="button" href="/events">
         <span>See the programme</span> <span aria-hidden="true">→</span>
       </a>
     </section>
@@ -84,9 +84,8 @@ const partnerName = (event) => partners.find((p) => p.id === event.partner_id)?.
   .events__list { border-top: 1.5px solid var(--ink); }
   .events__item { border-bottom: 1.5px solid var(--ink); }
 
-  .next-step {
+   .next-step {
     display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding-block: 32px 48px;
-    background: linear-gradient(var(--ink), var(--ink)) top center / min(1392px, calc(100% - 2 * var(--gutter))) 1.5px no-repeat;
   }
   .next-step__label { font-size: 13px; text-transform: uppercase; gap: 4px; }
   .next-step__label::before, .next-step__label::after { width: 4px; border-width: 1.5px; }
