@@ -154,8 +154,8 @@ h3 {
 /* Hover på links (menu og footer) */
 .hover-link {
   transition:
-    background 0.2s var(--ease-out) 0.12s,
-    color 0.2s var(--ease-out) 0.12s;
+    background 0.35s var(--ease-out) 0.15s,
+    color 0.35s var(--ease-out) 0.15s;
 }
 .hover-link:hover,
 .hover-link.active {
@@ -163,7 +163,7 @@ h3 {
   color: var(--off-white);
 }
 .hover-link:hover {
-  animation: kd-blur 0.32s var(--ease-out);
+  animation: kd-blur 0.5s var(--ease-out);
 }
 .hover-link.active {
   transition: none;
@@ -231,7 +231,7 @@ h3 {
 }
 /* Hover: kort blur → skarp */
 .button:hover > span {
-  animation: kd-blur 0.32s var(--ease-out);
+  animation: kd-blur 0.5s var(--ease-out);
 }
 .button--light > span {
   background: var(--off-white);

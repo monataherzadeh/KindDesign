@@ -1,6 +1,8 @@
 ---
-// KIND[ CPH ]DESIGN – det dynamiske logo 
-// Rækkefølge: CPH → 13.11 → TALK → smil.
+// KIND[ CPH ]DESIGN – det dynamiske logo
+// Rækkefølge: CPH → 13.11 → TALK → smil. Kører 3 runder og stopper på CPH.
+// Overgang som i pitchen: indholdet opløses (blur + fade), mens dørene lukker,
+// og det nye indhold kommer skarpt frem, når de åbner.
 // Props:
 //   words = ordene i parentesen. 
 //   light = lys tekst (til mørk baggrund, fx logoboksen i headeren)
@@ -46,36 +48,55 @@ const first = words[0] === "smile" ? smile : words[0];
     display: inline-flex; align-items: center; justify-content: center; overflow: hidden;
     font-size: 0.5em; line-height: 1.2;
     max-width: 6em; padding: 0.25em 0.375em;
-    transition: max-width 0.7s var(--ease-soft), padding 0.7s var(--ease-soft);
+    transition: max-width 1s var(--ease-out), padding 1s var(--ease-out);
   }
   .logo__content.is-closed {
     max-width: 0; padding-left: 0; padding-right: 0;
-    transition-duration: 0.6s;
+    transition: max-width 0.9s var(--ease-soft), padding 0.9s var(--ease-soft);
   }
-  .logo__word { display: inline-flex; align-items: center; }
+
+  /* Opløsning (dissolve) som i pitchen: ordet slører og toner ud, mens dørene lukker */
+  .logo__word {
+    display: inline-flex; align-items: center;
+    transition: filter 1s var(--ease-out), opacity 1s var(--ease-out);
+  }
+  .logo__content.is-closed .logo__word {
+    filter: blur(0.2em); opacity: 0;
+    transition: filter 0.9s var(--ease-soft), opacity 0.9s var(--ease-soft);
+  }
 
   /* Smilet er 25/35 af logoets højde */
   :global(.logo__smile) { display: block; height: 1.43em; width: auto; }
 
-  @media (prefers-reduced-motion: reduce) { .logo__content { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .logo__content, .logo__word { transition: none; } }
 </style>
 
 <script>
-  // luk 0,6 s → skift → åbn 0,7 s → vis 3 s
-  const CLOSE = 600, OPEN = 700, HOLD = 3000;
+  // Luk 0,9 s (ordet opløses) → skift → åbn 1 s → vis 3 s.
+  // 3 runder gennem alle ord, så stopper logoet på det første (CPH).
+  // Stopper efter ca. 1 min (WCAG 2.2.2: bevægelse over 5 sek. skal kunne stoppe).
+  const CLOSE = 900, OPEN = 1000, HOLD = 3000, ROUNDS = 3;
+
   document.querySelectorAll(".logo__word").forEach((el) => {
     const words = JSON.parse(el.dataset.words);
     const smile = el.dataset.smile;
     const box = el.parentElement;
     if (words.length < 2 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     let i = 0;
-    setInterval(() => {
+    let changes = 0;
+    const total = words.length * ROUNDS; // fx 4 ord × 3 runder = 12 skift
+
+    function next() {
       box.classList.add("is-closed");
       setTimeout(() => {
         i = (i + 1) % words.length;
         el.innerHTML = words[i] === "smile" ? smile : words[i];
         box.classList.remove("is-closed");
+        changes++;
+        if (changes < total) setTimeout(next, OPEN + HOLD);
       }, CLOSE);
-    }, CLOSE + OPEN + HOLD);
+    }
+    setTimeout(next, HOLD);
   });
 </script>
